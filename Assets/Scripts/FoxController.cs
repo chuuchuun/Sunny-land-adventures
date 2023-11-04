@@ -10,6 +10,11 @@ public class FoxController : MonoBehaviour
     private bool isWalking = false;
     private bool isFacingRight = true;
     private bool gameEnded = false;
+    private int maxLives = 3;
+    private int lives;
+    private Vector2 startPosition;
+    private int keysFound = 0;
+    private int keysNumber = 3;
 
     public float jumpForce = 6.0f;
     public float rayLength = 2.0f;
@@ -20,12 +25,42 @@ public class FoxController : MonoBehaviour
     {
         rigidBody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        startPosition = transform.position;
+        lives = maxLives;
     }
     void Start()
     {
 
     }
+    void Death()
+    {
+        if(lives > 0)
+        {
+            lives -= 1;
+            transform.position = startPosition;
+            Debug.Log($"You have {lives}/3 lives remaining.");
+        }
+        else
+        {
+            Debug.Log("You died.");
+            StartCoroutine(EndGameAfterDelay(1.0f));
+        }
+    }
 
+    void KeyFound()
+    {
+        if(keysFound < keysNumber)
+        {
+            keysFound++;
+            Debug.Log($"You found {keysFound}/{keysNumber} keys");
+        }
+        else
+        {
+            Debug.Log("Congratulations! You found all the keys");
+        }
+    }
+
+   
     // Update is called once per frame
     void Update()
     {
@@ -103,21 +138,54 @@ public class FoxController : MonoBehaviour
         }
         else if (other.CompareTag("Bear"))
         {
-            if(score>= 150)
+            if(keysFound == keysNumber)
             {
-                gameEnded = true;
+                Debug.Log("You've completed your mission. Thank you for the keys.");
                 StartCoroutine(EndGameAfterDelay(2.0f));
             }
             else
             {
-                Debug.Log("You haven't collected enough cherries yet. I can't let you go");
+                Debug.Log("You haven't collected enough keys yet. I can't let you go");
             }
+        }
+        else if (other.CompareTag("Enemy"))
+        {
+            if(transform.position.y > other.gameObject.transform.position.y)
+            {
+                score += 50;
+                Debug.Log("Killed an enemy.");
+            }
+            else
+            {
+                Death();
+            }
+        }
+        else if (other.CompareTag("Key"))
+        {
+            KeyFound();
+            other.gameObject.SetActive(false) ;
+        }
+        else if(other.CompareTag ("Heal")) {
+            if (lives < maxLives)
+            {
+                lives++;
+                other.gameObject.SetActive(false);
+                Debug.Log($"Now you have {lives} lives!");
+            }
+            else
+            {
+                Debug.Log("You don't need healing right now!");
+            }
+        }
+        else if (other.CompareTag("FallLevel"))
+        {
+            Death();
         }
     }
     IEnumerator EndGameAfterDelay(float delay)
     {
 
-        Debug.Log("You've completed your mission. Thank you for the cherries.");
+        
         yield return new WaitForSeconds(delay);
         UnityEditor.EditorApplication.isPlaying = false;
     }
