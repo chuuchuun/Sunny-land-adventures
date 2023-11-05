@@ -1442,8 +1442,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xMargin: 0.5
   yMargin: 0.25
-  xSmooth: 8
-  ySmooth: 8
+  xSmooth: 1
+  ySmooth: 1
   maxXAndY: {x: 100, y: 100}
   minXAndY: {x: -5, y: -2}
 --- !u!1001 &548485673
@@ -16116,19 +16116,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c81d4f294d220214eabe1d7002e812e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentGameState: 1
-  inGameCanvas: {fileID: 2079244113}
-  scoreText: {fileID: 40069671}
-  timeText: {fileID: 1412065573}
-  enemyText: {fileID: 883728574}
-  keysTab:
-  - {fileID: 453852238}
-  - {fileID: 778327098}
-  - {fileID: 764895134}
-  livesTab:
-  - {fileID: 1583501078}
-  - {fileID: 2029219749}
-  - {fileID: 570449872}
 --- !u!4 &1518017155
 Transform:
   m_ObjectHideFlags: 0
@@ -17289,7 +17276,7 @@ Transform:
   m_GameObject: {fileID: 1956273891}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.924, y: 0.298, z: 0}
+  m_LocalPosition: {x: -3.1, y: -0.08, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17369,12 +17356,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 621f5226372e14547b92a22d56763876, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1
-  jumpForce: 3
-  rayLength: 0.25
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!95 &1956273897
 Animator:
   serializedVersion: 5
