@@ -54,6 +54,7 @@ public class EnemyController : MonoBehaviour
         {
             if (transform.position.y < other.gameObject.transform.position.y)
             {
+                GetComponent<Collider2D>().enabled = false;
                 animator.SetBool("isDead", true);
                 StartCoroutine(KillOnAnimationEnd());
             }

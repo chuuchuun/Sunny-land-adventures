@@ -135,15 +135,15 @@ public class FoxController : MonoBehaviour
         }
         else if (other.CompareTag("Enemy"))
         {
-            if(transform.position.y > other.gameObject.transform.position.y)
-            {
-                GameManager.instance.KillEnemy();
-                Debug.Log("Killed an enemy.");
-            }
-            else
-            {
-                Death();
-            }
+                if (transform.position.y > other.gameObject.transform.position.y)
+                {
+                    GameManager.instance.KillEnemy();
+                    Debug.Log("Killed an enemy.");
+                }
+                else
+                {
+                    Death();
+                }
         }
         else if (other.CompareTag("Key"))
         {

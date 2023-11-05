@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 public enum GameState { GS_PAUSEMENU, GS_GAME, GS_LEVELCOMPLETED, GS_GAMEOVER };
 
 
@@ -20,6 +21,8 @@ public class GameManager : MonoBehaviour
     private int score = 0;
     private int keysFound = 0;
     private int lives = 3;
+
+    private bool canPause = true;
 
     public void AddPoints(int points)
     {
@@ -109,7 +112,7 @@ public class GameManager : MonoBehaviour
 
         // Assign the formatted time to the timeText
         timeText.text = formattedTime;
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKey(KeyCode.Escape) && canPause)
         {
             if (currentGameState == GameState.GS_PAUSEMENU)
             {
@@ -119,6 +122,15 @@ public class GameManager : MonoBehaviour
             {
                 PauseMenu();
             }
+
+            StartCoroutine(BlockPause());
         }
+    }
+
+    IEnumerator BlockPause()
+    {
+        canPause = false;
+        yield return new WaitForSeconds(0.1f);
+        canPause = true;
     }
 }
