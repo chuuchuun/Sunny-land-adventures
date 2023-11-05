@@ -69,28 +69,31 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isMovingRight)
+        if (GameManager.instance.currentGameState == GameState.GS_GAME)
         {
-            if(this.transform.position.x < startPositionX + moveRange)
+            if (isMovingRight)
             {
-                MoveRight();
+                if (this.transform.position.x < startPositionX + moveRange)
+                {
+                    MoveRight();
+                }
+                else
+                {
+                    Flip();
+                    MoveLeft();
+                }
             }
             else
             {
-                Flip();
-                MoveLeft();
-            }
-        }
-        else
-        {
-            if(this.transform.position.x > startPositionX - moveRange)
-            {
-                MoveLeft();
-            }
-            else
-            {
-                Flip();
-                MoveRight();
+                if (this.transform.position.x > startPositionX - moveRange)
+                {
+                    MoveLeft();
+                }
+                else
+                {
+                    Flip();
+                    MoveRight();
+                }
             }
         }
 

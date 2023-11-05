@@ -10,6 +10,7 @@ TagManager:
   - Key
   - Heal
   - FallLevel
+  - MovingPlatform
   layers:
   - Default
   - TransparentFX

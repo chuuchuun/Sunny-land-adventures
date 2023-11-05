@@ -11,22 +11,18 @@ public class FoxController : MonoBehaviour
     private bool isFacingRight = true;
     private bool gameEnded = false;
     private int maxLives = 3;
-    private int lives;
     private Vector2 startPosition;
-    private int keysFound = 0;
     private int keysNumber = 3;
 
     public float jumpForce = 6.0f;
     public float rayLength = 2.0f;
     public LayerMask groundLayer;
-    public int score = 0;
 
     void Awake()
     {
         rigidBody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         startPosition = transform.position;
-        lives = maxLives;
     }
     void Start()
     {
@@ -34,11 +30,10 @@ public class FoxController : MonoBehaviour
     }
     void Death()
     {
-        if(lives > 0)
+        if(GameManager.instance.GetLives() > 1)
         {
-            lives -= 1;
             transform.position = startPosition;
-            Debug.Log($"You have {lives}/3 lives remaining.");
+            GameManager.instance.Death();
         }
         else
         {
@@ -47,64 +42,55 @@ public class FoxController : MonoBehaviour
         }
     }
 
-    void KeyFound()
-    {
-        if(keysFound < keysNumber)
-        {
-            keysFound++;
-            Debug.Log($"You found {keysFound}/{keysNumber} keys");
-        }
-        else
-        {
-            Debug.Log("Congratulations! You found all the keys");
-        }
-    }
 
    
     // Update is called once per frame
     void Update()
     {
-        isWalking = false;
-
-        if (
-            Input.GetKey(KeyCode.RightArrow) ||
-            Input.GetKey(KeyCode.D)
-            )
+        if (GameManager.instance.currentGameState == GameState.GS_GAME)
         {
-            if (!isFacingRight)
+            isWalking = false;
+
+            if (
+                Input.GetKey(KeyCode.RightArrow) ||
+                Input.GetKey(KeyCode.D)
+                )
             {
-                Flip();
-                isFacingRight = true;
+                if (!isFacingRight)
+                {
+                    Flip();
+                    isFacingRight = true;
+                }
+                transform.Translate(moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
+                isWalking = true;
             }
-            transform.Translate(moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
-            isWalking = true;
-        }
 
-        if (
-            Input.GetKey(KeyCode.LeftArrow) ||
-            Input.GetKey(KeyCode.A)
-            )
-        {
-            if(isFacingRight)
+            if (
+                Input.GetKey(KeyCode.LeftArrow) ||
+                Input.GetKey(KeyCode.A)
+                )
             {
-                Flip();
-                isFacingRight = false;
+                if (isFacingRight)
+                {
+                    Flip();
+                    isFacingRight = false;
+                }
+                transform.Translate(-moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
+                isWalking = true;
             }
-            transform.Translate(-moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
-            isWalking = true;
-        }
 
-        if (
-            Input.GetMouseButtonDown(0) ||
-            Input.GetKeyDown(KeyCode.Space)
-            )
-        {
-            Jump();
-        }
+            if (
+                Input.GetMouseButtonDown(0) ||
+                Input.GetKeyDown(KeyCode.Space)
+                )
+            {
+                Jump();
+            }
 
-        Debug.DrawRay(transform.position, rayLength * Vector3.down, Color.red, 1, false);
-        animator.SetBool("isGrounded", IsGrounded());
-        animator.SetBool("isWalking", isWalking);
+            Debug.DrawRay(transform.position, rayLength * Vector3.down, Color.red, 1, false);
+            animator.SetBool("isGrounded", IsGrounded());
+            animator.SetBool("isWalking", isWalking);
+        }
     }
 
     bool IsGrounded()
@@ -132,13 +118,12 @@ public class FoxController : MonoBehaviour
     {
         if (other.CompareTag("Bonus"))
         {
-            score += 10;
-            Debug.Log("Score:" + score);
+            GameManager.instance.AddPoints(10);
             other.gameObject.SetActive(false);
         }
         else if (other.CompareTag("Bear"))
         {
-            if(keysFound == keysNumber)
+            if(GameManager.instance.GetNumberOfKeysFound() == keysNumber)
             {
                 Debug.Log("You've completed your mission. Thank you for the keys.");
                 StartCoroutine(EndGameAfterDelay(2.0f));
@@ -152,7 +137,7 @@ public class FoxController : MonoBehaviour
         {
             if(transform.position.y > other.gameObject.transform.position.y)
             {
-                score += 50;
+                GameManager.instance.KillEnemy();
                 Debug.Log("Killed an enemy.");
             }
             else
@@ -162,15 +147,14 @@ public class FoxController : MonoBehaviour
         }
         else if (other.CompareTag("Key"))
         {
-            KeyFound();
+            GameManager.instance.AddKeys();
             other.gameObject.SetActive(false) ;
         }
         else if(other.CompareTag ("Heal")) {
-            if (lives < maxLives)
+            if (GameManager.instance.GetLives() < maxLives)
             {
-                lives++;
+                GameManager.instance.Heal();
                 other.gameObject.SetActive(false);
-                Debug.Log($"Now you have {lives} lives!");
             }
             else
             {
@@ -181,6 +165,15 @@ public class FoxController : MonoBehaviour
         {
             Death();
         }
+        else if (other.CompareTag("MovingPlatform"))
+        {
+            transform.SetParent(other.transform);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        transform.SetParent(null);
     }
     IEnumerator EndGameAfterDelay(float delay)
     {

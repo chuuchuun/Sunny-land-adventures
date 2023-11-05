@@ -13,7 +13,6 @@ public class BearController : MonoBehaviour
     void Awake()
     {
         startPositionX = this.transform.position.x;
-        Debug.Log(startPositionX);
     }
 
     void Update()
