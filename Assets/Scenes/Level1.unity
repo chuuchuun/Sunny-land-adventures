@@ -1442,8 +1442,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xMargin: 0.5
   yMargin: 0.25
-  xSmooth: 8
-  ySmooth: 8
+  xSmooth: 2
+  ySmooth: 2
   maxXAndY: {x: 100, y: 100}
   minXAndY: {x: -5, y: -2}
 --- !u!1001 &548485673
@@ -17289,7 +17289,7 @@ Transform:
   m_GameObject: {fileID: 1956273891}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.924, y: 0.298, z: 0}
+  m_LocalPosition: {x: -3.13, y: -0.13, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
