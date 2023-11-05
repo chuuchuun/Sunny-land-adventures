@@ -7,14 +7,20 @@ public class BearController : MonoBehaviour
     [SerializeField] private float moveSpeed = 0.05f;
     private bool isFacingRight = true; // Initially facing right
     private int direction = -1; // 1 for right, -1 for left
-    public float minX = 1.55f;
-    public float maxX = 1.88f;
+    private float startPositionX;
+    public float moveRange = 0.5f;
 
-    void FixedUpdate()
+    void Awake()
+    {
+        startPositionX = this.transform.position.x;
+        Debug.Log(startPositionX);
+    }
+
+    void Update()
     {
         Vector3 newPosition = transform.position + new Vector3(moveSpeed * direction * Time.fixedDeltaTime, 0.0f, 0.0f);
 
-        if ((direction == 1 && newPosition.x > maxX) || (direction == -1 && newPosition.x < minX))
+        if ((direction == 1 && newPosition.x > startPositionX + moveRange) || (direction == -1 && newPosition.x < startPositionX - moveRange))
         {
             direction *= -1;
 
