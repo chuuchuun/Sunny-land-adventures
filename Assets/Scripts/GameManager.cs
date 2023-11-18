@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
-public enum GameState { GS_PAUSEMENU, GS_GAME, GS_LEVELCOMPLETED, GS_GAMEOVER };
+public enum GameState { GS_PAUSEMENU, GS_GAME, GS_LEVELCOMPLETED, GS_GAMEOVER , GS_OPTIONS};
 
 
 public class GameManager : MonoBehaviour
@@ -15,11 +15,14 @@ public class GameManager : MonoBehaviour
     public TMP_Text enemyText;
     public TMP_Text endScoreText;
     public TMP_Text endHighScoreText;
+
     public Image[] keysTab;
     public Image[] livesTab;
+
     public Canvas pauseMenuCanvas;
     public Canvas inGameCanvas;
     public Canvas levelCompletedCanvas;
+    public Canvas optionsCanvas;
 
     private float timer = 0;
     private int enemyKillCount = 0;
@@ -121,6 +124,10 @@ public class GameManager : MonoBehaviour
         SetGameState(GameState.GS_PAUSEMENU);
     }
 
+    public void Options()
+    {
+        SetGameState(GameState.GS_OPTIONS);
+    }
     public void InGame()
     {
         SetGameState(GameState.GS_GAME);

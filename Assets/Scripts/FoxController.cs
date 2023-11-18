@@ -5,7 +5,11 @@ using UnityEngine;
 public class FoxController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 1.0f;
-    [SerializeField] public AudioClip bSound;
+    [SerializeField] public AudioClip bonusSound;
+    [SerializeField] public AudioClip hurtSound;
+    [SerializeField] public AudioClip killSound;
+    [SerializeField] public AudioClip healSound;
+
     private Rigidbody2D rigidBody;
     private Animator animator;
     private bool isWalking = false;
@@ -13,7 +17,7 @@ public class FoxController : MonoBehaviour
     private int maxLives = 3;
     private Vector2 startPosition;
     private int keysNumber = 3;
-
+    private AudioSource source;
     public float jumpForce = 6.0f;
     public float rayLength = 2.0f;
     public LayerMask groundLayer;
@@ -23,6 +27,7 @@ public class FoxController : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         startPosition = transform.position;
+        source = GetComponent<AudioSource>();
     }
     void Start()
     {
@@ -120,6 +125,7 @@ public class FoxController : MonoBehaviour
         {
             GameManager.instance.AddPoints(10);
             other.gameObject.SetActive(false);
+            source.PlayOneShot(bonusSound, AudioListener.volume);
         }
         else if (other.CompareTag("Exit"))
         {
@@ -140,11 +146,13 @@ public class FoxController : MonoBehaviour
                 if (transform.position.y > other.gameObject.transform.position.y)
                 {
                     GameManager.instance.KillEnemy();
+                    source.PlayOneShot(killSound, AudioListener.volume);
                     Debug.Log("Killed an enemy.");
                 }
                 else
                 {
-                    Death();
+                source.PlayOneShot(hurtSound, AudioListener.volume);
+                Death();
                 }
         }
         else if (other.CompareTag("Key"))
@@ -157,6 +165,7 @@ public class FoxController : MonoBehaviour
             {
                 GameManager.instance.Heal();
                 other.gameObject.SetActive(false);
+                source.PlayOneShot(healSound, AudioListener.volume);
             }
             else
             {
