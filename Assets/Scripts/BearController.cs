@@ -17,17 +17,20 @@ public class BearController : MonoBehaviour
 
     void Update()
     {
-        Vector3 newPosition = transform.position + new Vector3(moveSpeed * direction * Time.fixedDeltaTime, 0.0f, 0.0f);
-
-        if ((direction == 1 && newPosition.x > startPositionX + moveRange) || (direction == -1 && newPosition.x < startPositionX - moveRange))
+        if (GameManager.instance.currentGameState == GameState.GS_GAME)
         {
-            direction *= -1;
+            Vector3 newPosition = transform.position + new Vector3(moveSpeed * direction * Time.fixedDeltaTime, 0.0f, 0.0f);
 
-            Flip();
-        }
-        else
-        {
-            transform.position = newPosition;
+            if ((direction == 1 && newPosition.x > startPositionX + moveRange) || (direction == -1 && newPosition.x < startPositionX - moveRange))
+            {
+                direction *= -1;
+
+                Flip();
+            }
+            else
+            {
+                transform.position = newPosition;
+            }
         }
     }
 

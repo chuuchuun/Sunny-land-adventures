@@ -11,6 +11,7 @@ TagManager:
   - Heal
   - FallLevel
   - MovingPlatform
+  - Exit
   layers:
   - Default
   - TransparentFX

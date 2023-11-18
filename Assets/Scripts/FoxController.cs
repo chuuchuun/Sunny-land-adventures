@@ -5,11 +5,11 @@ using UnityEngine;
 public class FoxController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 1.0f;
+    [SerializeField] public AudioClip bSound;
     private Rigidbody2D rigidBody;
     private Animator animator;
     private bool isWalking = false;
     private bool isFacingRight = true;
-    private bool gameEnded = false;
     private int maxLives = 3;
     private Vector2 startPosition;
     private int keysNumber = 3;
@@ -121,12 +121,14 @@ public class FoxController : MonoBehaviour
             GameManager.instance.AddPoints(10);
             other.gameObject.SetActive(false);
         }
-        else if (other.CompareTag("Bear"))
+        else if (other.CompareTag("Exit"))
         {
             if(GameManager.instance.GetNumberOfKeysFound() == keysNumber)
             {
+                GameManager.instance.AddPoints(100 * GameManager.instance.GetLives());
                 Debug.Log("You've completed your mission. Thank you for the keys.");
-                StartCoroutine(EndGameAfterDelay(2.0f));
+                GameManager.instance.LevelCompleted();
+
             }
             else
             {

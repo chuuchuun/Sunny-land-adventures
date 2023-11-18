@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 public enum GameState { GS_PAUSEMENU, GS_GAME, GS_LEVELCOMPLETED, GS_GAMEOVER };
 
 
@@ -9,21 +10,37 @@ public class GameManager : MonoBehaviour
 {
     public GameState currentGameState = GameState.GS_GAME;
     public static GameManager instance;
-    public Canvas inGameCanvas;
     public TMP_Text scoreText;
     public TMP_Text timeText;
     public TMP_Text enemyText;
+    public TMP_Text endScoreText;
+    public TMP_Text endHighScoreText;
     public Image[] keysTab;
     public Image[] livesTab;
-    private float timer = 0;
+    public Canvas pauseMenuCanvas;
+    public Canvas inGameCanvas;
+    public Canvas levelCompletedCanvas;
 
+    private float timer = 0;
     private int enemyKillCount = 0;
     private int score = 0;
     private int keysFound = 0;
     private int lives = 3;
-
     private bool canPause = true;
+    private static string keyHighScore = "HighScoreLevel1";
 
+    public void OnResumeButtonClicked()
+    {
+        InGame();
+    }
+    public void OnRestartButtonClicked()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    public void OnReturnToMainMenuButtonClicked()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
     public void AddPoints(int points)
     {
         score += points;
@@ -55,18 +72,37 @@ public class GameManager : MonoBehaviour
         instance = this; 
         scoreText.enabled = true;
         timeText.enabled = true;
-        enemyText.enabled = true;   
+        enemyText.enabled = true;
+        pauseMenuCanvas.enabled = false;
+        InGame();
         for(int i = 0; i < keysTab.Length; i++)
         {
             keysTab[i].color = Color.grey;
+        }
+        if(!PlayerPrefs.HasKey(keyHighScore))
+        {
+            PlayerPrefs.SetInt(keyHighScore, 0);
         }
      }
     void SetGameState(GameState newGameState)
     {
         currentGameState = newGameState;
-        if(currentGameState == GameState.GS_GAME)
+        inGameCanvas.enabled = (currentGameState == GameState.GS_GAME);
+        pauseMenuCanvas.enabled = (currentGameState == GameState.GS_PAUSEMENU);
+        levelCompletedCanvas.enabled = (currentGameState == GameState.GS_LEVELCOMPLETED);
+        if(currentGameState == GameState.GS_LEVELCOMPLETED)
         {
-            inGameCanvas.enabled = true;
+            endScoreText.text = score.ToString();
+            Scene currentScene = SceneManager.GetActiveScene();
+            if(currentScene.name == "Level1")
+            {
+                int highScore = PlayerPrefs.GetInt(keyHighScore);
+                if (highScore < score){
+                    highScore = score;
+                    PlayerPrefs.SetInt(keyHighScore, highScore);
+                }
+                endHighScoreText.text = PlayerPrefs.GetInt(keyHighScore).ToString();
+            }
         }
     }
     public void AddKeys()
