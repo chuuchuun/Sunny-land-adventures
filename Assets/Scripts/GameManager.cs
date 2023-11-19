@@ -15,9 +15,11 @@ public class GameManager : MonoBehaviour
     public TMP_Text enemyText;
     public TMP_Text endScoreText;
     public TMP_Text endHighScoreText;
-
+    public TMP_Text qualityLevel;
     public Image[] keysTab;
     public Image[] livesTab;
+
+    public Slider volumeSlider;
 
     public Canvas pauseMenuCanvas;
     public Canvas inGameCanvas;
@@ -39,6 +41,22 @@ public class GameManager : MonoBehaviour
     public void OnRestartButtonClicked()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    public void OnPlusButtonClicked()
+    {
+        QualitySettings.IncreaseLevel();
+        qualityLevel.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
+
+    }
+    public void ONMinusButtonClicked()
+    {
+        QualitySettings.DecreaseLevel();
+        qualityLevel.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
+
+    }
+    public void SetVolume(float vol)
+    {
+        AudioListener.volume = vol;
     }
     public void OnReturnToMainMenuButtonClicked()
     {
@@ -77,6 +95,12 @@ public class GameManager : MonoBehaviour
         timeText.enabled = true;
         enemyText.enabled = true;
         pauseMenuCanvas.enabled = false;
+        optionsCanvas.enabled = false;
+        if(volumeSlider!= null)
+        {
+            volumeSlider.onValueChanged.AddListener(SetVolume);
+        }
+        SetVolume(0.5f);
         InGame();
         for(int i = 0; i < keysTab.Length; i++)
         {
@@ -93,6 +117,7 @@ public class GameManager : MonoBehaviour
         inGameCanvas.enabled = (currentGameState == GameState.GS_GAME);
         pauseMenuCanvas.enabled = (currentGameState == GameState.GS_PAUSEMENU);
         levelCompletedCanvas.enabled = (currentGameState == GameState.GS_LEVELCOMPLETED);
+        optionsCanvas.enabled = (currentGameState==GameState.GS_OPTIONS);
         if(currentGameState == GameState.GS_LEVELCOMPLETED)
         {
             endScoreText.text = score.ToString();
@@ -126,10 +151,12 @@ public class GameManager : MonoBehaviour
 
     public void Options()
     {
+        Time.timeScale = 0;
         SetGameState(GameState.GS_OPTIONS);
     }
     public void InGame()
     {
+        Time.timeScale = 1.0f;
         SetGameState(GameState.GS_GAME);
     }
     public void LevelCompleted()
