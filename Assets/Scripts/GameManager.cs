@@ -19,12 +19,18 @@ public class GameManager : MonoBehaviour
     public Image[] keysTab;
     public Image[] livesTab;
 
+    public float foxXPosition = 0;
+    public bool bossFightStarted = false;
+    public bool bossDefeated = false;
+    public GameObject bossDoor;
+
     public Slider volumeSlider;
 
     public Canvas pauseMenuCanvas;
     public Canvas inGameCanvas;
     public Canvas levelCompletedCanvas;
     public Canvas optionsCanvas;
+    public Canvas tutorialCanvas;
 
     private float timer = 0;
     private int enemyKillCount = 0;
@@ -96,6 +102,7 @@ public class GameManager : MonoBehaviour
         enemyText.enabled = true;
         pauseMenuCanvas.enabled = false;
         optionsCanvas.enabled = false;
+        tutorialCanvas.enabled = true;
         if(volumeSlider!= null)
         {
             volumeSlider.onValueChanged.AddListener(SetVolume);

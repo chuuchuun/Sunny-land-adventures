@@ -12,6 +12,12 @@ TagManager:
   - FallLevel
   - MovingPlatform
   - Exit
+  - Spike
+  - Wall
+  - BossDoor
+  - BossStarter
+  - FinishDoor
+  - Location2
   layers:
   - Default
   - TransparentFX

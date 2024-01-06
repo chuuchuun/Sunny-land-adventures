@@ -54,9 +54,7 @@ public class EnemyController : MonoBehaviour
         {
             if (transform.position.y < other.gameObject.transform.position.y)
             {
-                GetComponent<Collider2D>().enabled = false;
-                animator.SetBool("isDead", true);
-                StartCoroutine(KillOnAnimationEnd());
+                Die();
             }
         }
     }
@@ -66,6 +64,12 @@ public class EnemyController : MonoBehaviour
         moveSpeed = 0;
         yield return new WaitForSeconds(1);
         gameObject.SetActive(false);
+    }
+    public void Die()
+    {
+        GetComponent<Collider2D>().enabled = false;
+        animator.SetBool("isDead", true);
+        StartCoroutine(KillOnAnimationEnd());
     }
     // Update is called once per frame
     void Update()

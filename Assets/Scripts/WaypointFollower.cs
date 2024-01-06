@@ -16,8 +16,6 @@ public class WaypointFollower : MonoBehaviour
             {
                 currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
             }
-
-            // Move the platform towards the current waypoint
             this.transform.position = Vector2.MoveTowards(this.transform.position, waypoints[currentWaypoint].transform.position, speed * Time.deltaTime);
         }
     }
